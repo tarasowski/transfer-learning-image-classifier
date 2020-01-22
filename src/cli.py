@@ -10,6 +10,7 @@ def init_train():
     parser_train.add_argument('--learning_rate', default=0.003, type=int, help='Assign the learning rate you want to use during the training phase')
     parser_train.add_argument('--hidden_units', default=256, type=int, help='Assign how many hidden units you want to have in your architecture')
     parser_train.add_argument('--epochs', default=10, type=int, help='Assign the amount of epochs for the training phase')
+    parser_train.add_argument('--gpu', action='store_true', help='Force to run in on the GPU always')
 
     args_train = parser_train.parse_args()
     data_dir = args_train.data_directory
@@ -39,10 +40,10 @@ def init_predict():
     picture_path = args_predict.picture_path
     checkpoint = args_predict.checkpoint
     top_k = args_predict.top_k
-    category_names = args_predict.category_names
+    category_file = args_predict.category_names
     gpu = args_predict.gpu
     if gpu:
         device = torch.device('cuda')
     else:
         device = torch.device('cpu')
-    return picture_path, checkpoint, top_k, category_names, device
+    return picture_path, checkpoint, top_k, category_file, device

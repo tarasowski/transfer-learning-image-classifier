@@ -6,7 +6,7 @@ from PIL import Image
 from . import cli
 import json
 
-picture_path, checkpoint_name, top_k, category_names, device = cli.init_predict()
+picture_path, checkpoint_name, top_k, category_file, device = cli.init_predict()
 
 def load_checkpoint(filepath):
     checkpoint = torch.load(filepath, map_location='cpu')
@@ -56,21 +56,30 @@ def predict(image_path, model, categories, topk=5):
     idx = model.class_to_idx
     inverse = {v: k for k, v in idx.items()}
     category_idx = [inverse[y] for x in top_class.tolist() for y in x] 
-    category_names = [categories[str(x)] for x in category_idx]
-    return (top_p, category_idx, category_names)
+    if categories != None:
+        category_names = [categories[str(x)] for x in category_idx]
+        return (top_p, category_idx, category_names)
+    else: 
+        return (top_p, category_idx, None)
 
-def category_json(path):
-    f = open(path, 'r').readlines()[0]
-    return json.loads(f)
+def category_json(category_file):
+    if category_file != None:
+        f = open(f'./input/{category_file}', 'r').readlines()[0]
+        return json.loads(f)
+    else:
+        return None
     
-
-categories = category_json(f'./input/{category_names}')
+categories = category_json(category_file)
 
 probs, classes, category_names = predict(picture_path, model, categories, top_k)
 
-print([format(y, 'f') 
-        for x in probs.tolist()
-        for y in x
-        ])
-print(classes)
-print(category_names)
+def pretty_print(probs, classes, category_names):
+    print([format(y, 'f') 
+            for x in probs.tolist()
+            for y in x
+            ])
+    print(classes)
+    if category_names != None:
+        print(category_names)
+
+pretty_print(probs, classes, category_names)

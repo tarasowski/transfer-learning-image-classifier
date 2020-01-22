@@ -1,4 +1,7 @@
 #!/bin/bash
+#Examples
+  #python3 -m src.predict ./input/flowers/test/99/image_07833.jpg checkpoint --top_k 3 --category_names cat_to_name.json 
+  #python3 -m src.predict ./input/flowers/test/102/image_08012.jpg checkpoint --top_k 3 --category_names cat_to_name.json
 
-python3 -m src.predict ./input/flowers/test/99/image_07833.jpg checkpoint --top_k 3 --category_names cat_to_name.json 
+python3 -m src.predict $@
 

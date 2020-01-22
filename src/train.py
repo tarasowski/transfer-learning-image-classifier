@@ -37,20 +37,31 @@ train_data = datasets.ImageFolder(train_dir, transform=train_transforms)
 valid_data = datasets.ImageFolder(valid_dir, transform=valid_transforms)
 test_data = datasets.ImageFolder(test_dir, transform=test_transforms)
 
-trainloader = torch.utils.data.DataLoader(train_data, batch_size=64, shuffle=True)
-validloader = torch.utils.data.DataLoader(valid_data, batch_size=64)
-testloader = torch.utils.data.DataLoader(test_data, batch_size=64)
+batch_size = 64
+
+trainloader = torch.utils.data.DataLoader(train_data, batch_size, shuffle=True)
+validloader = torch.utils.data.DataLoader(valid_data, batch_size)
+testloader = torch.utils.data.DataLoader(test_data, batch_size)
 
 model = getattr(models, arch)(pretrained=True)
+
+def extract_input(model):
+    try:
+        return model.classifier.in_features
+    except Exception as e:
+        return model.classifier[0].in_features
+
+input_features = extract_input(model)
+output_units = 102
 
 for param in model.parameters():
     param.requires_grad = False
 
 classifier = nn.Sequential(
-        nn.Linear(1024, hidden_units),
+        nn.Linear(input_features, hidden_units),
         nn.ReLU(),
         nn.Dropout(p=0.2),
-        nn.Linear(hidden_units, 102),
+        nn.Linear(hidden_units, output_units),
         nn.LogSoftmax(dim=1)
         )
 
@@ -104,18 +115,20 @@ for epoch in range(epochs):
             model.train()
 
 checkpoint = {
-        'input_size': 1024,
-        'output_size': 102,
+        'input_size': input_features,
+        'hidden_units': hidden_units,
+        'output_size': output_units,
+        'epochs': epochs,
+        'batch_size': batch_size,
+        'model': getattr(models, arch)(pretrained=True),
         'state_dict': model.state_dict(),
         'classifier': model.classifier,
         'optimizer_state': optimizer.state_dict(),
-        'epochs': epochs,
-        'hidden_units': hidden_units,
         'class_to_idx': train_data.class_to_idx
         }
 
 def save_model(checkpoint):
     if save_dir:
-        torch.save(checkpoint, f'checkpoint-{arch}-{hidden_units}.pth')
+        torch.save(checkpoint, f'./models/checkpoint-{arch}-{hidden_units}.pth')
     else:
         print('Model is not saved. Please provide save_directory')
