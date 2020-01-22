@@ -32,6 +32,7 @@ For the prediction part please use following arguments:
   * Use a mapping of categories to real names: `./predict path/to/image
 checkpoint --category_names cat_to_name.json`
   * Use GPU for inference: `./predict path/to/image checkpoint --gpu`
+* Example: `./predict ./input/flowers/test/102/image_08012.jpg checkpoint --top_k 3 --category_names cat_to_name.json`
 
 ## Support
 Patches are encouraged and may be submitted by forking this project and submitting a pull request through GitHub.
