@@ -9,10 +9,11 @@ commercial success.
 * Torch v1.4.0
 * Trochvision v0.5.0
 * Images (Train/Valid/Test)- [download here](https://s3.amazonaws.com/content.udacity-data.com/nd089/flower_data.tar.gz)
+* Trained Model - [download here](https://drive.google.com/file/d/1UTBWSlqzLPrSsBgk6l6yOA-NoLKdTosQ/view?usp=sharing)
 
 ## Getting Started
 This project has two main files. The file for the training part and the prediction (inference) part. The training part is generic and can be used with any pre-trained model from the [Torchvision module](https://pytorch.org/docs/stable/torchvision/models.html). As a starting point, you can use `densenet121`. 
-First, you need to download the images for the training, validation and testing phase (see link above). Unzip the images and place them into the `./input` directory. 
+First, you need to download the images for the training, validation and testing phase (see link above). Unzip the images and place them into the `./input` directory. Then you need to download the trained model and place it into `./models` (see link above). 
 
 Once the images are unziped, you can use following arguments to train the model: 
 
