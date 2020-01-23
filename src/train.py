@@ -50,6 +50,10 @@ def extract_input(model):
         return model.classifier.in_features
     except Exception as e:
         return model.classifier[0].in_features
+    except Exception as e:
+        return model.fc.in_features
+    except Exception as e:
+        return model.classifier[1].in_channels
 
 input_features = extract_input(model)
 output_units = 102
@@ -120,6 +124,7 @@ checkpoint = {
         'output_size': output_units,
         'epochs': epochs,
         'batch_size': batch_size,
+        'learning_rate': learning_rate,
         'model': getattr(models, arch)(pretrained=True),
         'state_dict': model.state_dict(),
         'classifier': model.classifier,
